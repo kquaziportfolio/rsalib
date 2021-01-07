@@ -1,19 +1,23 @@
 import rsalib, time, click, rsa
-
+from pyfiglet import Figlet
+from colorama import init, Fore, Back, Style
+init(autoreset=True)
 click.arg = click.argument
-
+__version__="1.0.0"
 
 @click.group()
-def main():
-    print("RSALib v 0.1.10", end="")
-    print("\n===============\n")
-
+@click.option("--no-banner","no_banner",is_flag=True)
+def main(no_banner):
+    if not(no_banner):
+        f=Figlet(font="banner3-D")
+        print(Fore.GREEN+f.renderText("RSA-CLI Version "+__version__))
 
 @main.command()
 @click.arg("size", type=int)
 @click.arg("priv_key")
 @click.arg("pub_key")
 def keygen(size, priv_key, pub_key):
+    print("Generating key...")
     n, e, d, p, q, pubkey, privkey = rsalib.keygen(size)
     with open(pub_key, "wb") as f:
         f.write(pubkey.save_pkcs1())
