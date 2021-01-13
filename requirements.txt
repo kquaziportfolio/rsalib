@@ -1,5 +1,5 @@
-rsa
-click
-pyfiglet
-colorama
-sympy
+click == 7.1.2
+colorama == 0.4.3
+pyfiglet == 0.8.post1
+rsa == 4.7
+sympy == 1.6.2
