@@ -1,16 +1,25 @@
-import rsalib, time, click, rsa
+import time
+
+import click
+import click_spinner
+import rsa
+from colorama import Back, Fore, Style, init
 from pyfiglet import Figlet
-from colorama import init, Fore, Back, Style
+
+import rsalib
+
 init(autoreset=True)
 click.arg = click.argument
-__version__="1.0.0"
+__version__ = "1.0.0"
+
 
 @click.group()
-@click.option("--no-banner","no_banner",is_flag=True)
+@click.option("--no-banner", "no_banner", is_flag=True)
 def main(no_banner):
-    if not(no_banner):
-        f=Figlet(font="banner3-D")
-        print(Fore.GREEN+f.renderText("RSA-CLI Version "+__version__))
+    if not (no_banner):
+        f = Figlet(font="banner3-D")
+        print(Fore.GREEN + f.renderText("RSA-CLI Version " + __version__))
+
 
 @main.command()
 @click.arg("size", type=int)
@@ -18,7 +27,8 @@ def main(no_banner):
 @click.arg("pub_key")
 def keygen(size, priv_key, pub_key):
     print("Generating key...")
-    n, e, d, p, q, pubkey, privkey = rsalib.keygen(size)
+    with click_spinner.spinner():
+        n, e, d, p, q, pubkey, privkey = rsalib.keygen(size)
     with open(pub_key, "wb") as f:
         f.write(pubkey.save_pkcs1())
     with open(priv_key, "wb") as f:
