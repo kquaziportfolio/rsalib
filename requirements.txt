@@ -2,20 +2,23 @@
 
 # D:\coding\py\rsalib\fastgen.py: 29
 # D:\coding\py\rsalib\quickhash.py: 1
-# D:\coding\py\rsalib\rsacli.py: 2
+# D:\coding\py\rsalib\rsacli.py: 3
 # D:\coding\py\rsalib\rsacrack.py: 1
 click == 7.1.2
 
-# D:\coding\py\rsalib\rsacli.py: 3
-click_spinner == 0.1.10
-
 # D:\coding\py\rsalib\rsacli.py: 5
-colorama == 0.4.3
-
-# D:\coding\py\rsalib\rsacli.py: 6
-pyfiglet == 0.8.post1
+click_didyoumean == 0.0.3
 
 # D:\coding\py\rsalib\rsacli.py: 4
+click_spinner == 0.1.10
+
+# D:\coding\py\rsalib\rsacli.py: 7
+colorama == 0.4.3
+
+# D:\coding\py\rsalib\rsacli.py: 8
+pyfiglet == 0.8.post1
+
+# D:\coding\py\rsalib\rsacli.py: 6
 # D:\coding\py\rsalib\rsacrack.py: 1
 # D:\coding\py\rsalib\rsalib.py: 1
 # D:\coding\py\rsalib\rsashell.py: 4

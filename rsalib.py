@@ -12,7 +12,7 @@ def encrypt(message, n, e):
     pub_key = rsa.PublicKey(n, e)
     if type(message) == type("HI"):
         message = message.encode("utf-8")
-    elif type(message) == type("1".encode("utf-8")):
+    elif type(message) == type(b"1"):
         pass
     else:
         raise Exception("Please format your message to binary or string")
@@ -24,7 +24,7 @@ def decrypt(message, n, e, d, p, q):
     priv_key = rsa.PrivateKey(n, e, d, p, q)
     if type(message) == type("HI"):
         message = message.encode("utf-8")
-    elif type(message) == type("1".encode("utf-8")):
+    elif type(message) == type(b"1"):
         pass
     else:
         raise Exception("Please format your message to binary or string")
@@ -34,7 +34,7 @@ def decrypt(message, n, e, d, p, q):
 def decryptformed(message, priv_key):
     if type(message) == type("HI"):
         message = message.encode("utf-8")
-    elif type(message) == type("1".encode("utf-8")):
+    elif type(message) == type(b"1"):
         pass
     else:
         raise Exception("Please format your message to binary or string")
@@ -57,14 +57,12 @@ def verifymessage(message, sig, n, e):
 
 
 def pubinfo(pub_key):
-    with open(pub_key) as f:
-        pubkey = rsa.PublicKey.load_pkcs1(f.read())
+    pubkey = rsa.PublicKey.load_pkcs1(pub_key)
     return pubkey.n, pubkey.e
 
 
 def privinfo(priv_key):
-    with open(priv_key) as f:
-        privkey = rsa.PrivateKey.load_pkcs1(f.read())
+    privkey = rsa.PrivateKey.load_pkcs1(priv_key)
     n, e, d, p, q = privkey.n, privkey.e, privkey.d, privkey.p, privkey.q
     return n, e, d, p, q
 
