@@ -17,6 +17,7 @@ __version__ = "1.0.0"
 @click.group(cls=click_didyoumean.DYMGroup)
 @click.option("--no-banner", "no_banner", is_flag=True)
 def main(no_banner):
+    """Main command group that prints the PyFiglet banner"""
     if not (no_banner):
         f = Figlet(font="banner3-D")
         print(Fore.GREEN + f.renderText("RSA-CLI Version " + __version__))
@@ -27,6 +28,7 @@ def main(no_banner):
 @click.arg("priv_key")
 @click.arg("pub_key")
 def keygen(size, priv_key, pub_key):
+    """Generated a RSA keypair"""
     initial_time = time.time()
     print("Generating key...")
     with click_spinner.spinner():
@@ -44,6 +46,7 @@ def keygen(size, priv_key, pub_key):
 @click.arg("pub_key", type=click.File())
 @click.arg("output", type=click.File("wb"))
 def encrypt(messagef, pub_key, output):
+    """Encrypt MESSAGEF with the public key specified in PUB_KEY and store it in OUTPUT"""
     pubkey = rsa.PublicKey.load_pkcs1(pub_key.read())
     crypto = rsalib.encrypt(messagef.read(), pubkey.n, pubkey.e)
     output.write(crypto)
@@ -55,6 +58,7 @@ def encrypt(messagef, pub_key, output):
 @click.arg("priv_key", type=click.File())
 @click.arg("outfile", type=click.File("w"))
 def decrypt(crypto, priv_key, outfile):
+    """Decrypt CRYPTO with the private key in PRIV_KEY and store it in OUTFILE"""
     privkey = rsa.PrivateKey.load_pkcs1(priv_key.read())
     crypted = crypto.read()
     message = rsalib.decryptformed(crypted, privkey)
@@ -67,6 +71,7 @@ def decrypt(crypto, priv_key, outfile):
 @click.arg("output", type=click.File("wb"))
 @click.option("--hashtype", "-h", default="SHA-256")
 def sign(message, priv_key, output, hashtype):
+    """Sign MESSAGE with private key in PRIV_KEY with hash type HASHTYPE and store it in OUTPUT"""
     privkey = rsa.PrivateKey.load_pkcs1(priv_key.read())
     sig = rsalib.signmessage(message.read(), privkey, hashtype)
     output.write(sig)
@@ -78,6 +83,7 @@ def sign(message, priv_key, output, hashtype):
 @click.arg("sig_file", type=click.File("rb"))
 @click.arg("pub_key", type=click.File())
 def verify(message, sig_file, pub_key):
+    """Verify MESSAGE and SIG_FILE message/signature pair with PUB_KEY"""
     pubkey = rsa.PublicKey.load_pkcs1(pub_key.read())
     sig = sig_file.read()
     try:
@@ -97,6 +103,7 @@ message and beware of the MITM (Man in the Middle) attack."""
 @main.command()
 @click.arg("pubkey", type=click.File())
 def pubinfo(pubkey):
+    """Get details on PUBKEY"""
     n, e = rsalib.pubinfo(pubkey.read())
     print("E:\n", e, "\nN:\n", n)
 
@@ -104,9 +111,10 @@ def pubinfo(pubkey):
 @main.command()
 @click.arg("privkey", type=click.File())
 def privinfo(privkey):
+    """Get details on PRIVKEY"""
     n, e, d, p, q = rsalib.privinfo(privkey.read())
     print("Size is: ", n.bit_length(), "\n")
-    print("E:\n", e, "\nN:\n", n, "\nD:\n", d, "\nP:", p, "\nQ:\n", q)
+    print("E:\n", e, "\nN:\n", n, "\nD:\n", d, "\nP:\n", p, "\nQ:\n", q)
 
 
 if __name__ == "__main__":

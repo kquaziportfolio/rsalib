@@ -1,8 +1,16 @@
-from itertools import count
 import time
+from itertools import count
+
+import click
+import click_spinner
+
+click.arg = click.argument
 
 
 def genpls():
+    """
+    Generator that yields primes relatively quickly.
+    """
     yield 2
     yield 3
     yield 5
@@ -26,15 +34,13 @@ def genpls():
         sieve[m] = s
 
 
-import click
-
-click.arg = click.argument
-
-
 @click.command()
 @click.arg("num")
-@click.arg("out", type=click.File("w"))
+@click.arg("out", default="-", type=click.File("w"))
 def main(num, out):
+    """
+    Generates NUM prime numbers and stores them in OUT
+    """
     num = int(num)
     g = genpls()
     c = time.time()
@@ -42,10 +48,22 @@ def main(num, out):
     a = 1
     while t <= num:
         out.write(str(t) + "\n")
+        if a % 100000 == 0:
+            print(
+                "Num:",
+                t,
+                "Time:",
+                time.time() - c,
+                "Num of primes gen:",
+                a,
+                "\n\n",
+                sep="\n",
+            )
         t = next(g)
         a += 1
     print("Done!")
     print("Took", time.time() - c, "seconds to compute", a, "primes up to", num)
 
 
-main()
+if __name__ == "__main__":
+    main()

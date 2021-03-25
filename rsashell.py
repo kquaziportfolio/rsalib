@@ -1,13 +1,19 @@
-from cmd import Cmd
-import subprocess as sp
-import rsalib
-import rsa
-import time
 import os
+import subprocess as sp
 import sys
+import time
+from cmd import Cmd
+
+import rsa
+
+import rsalib
 
 
-class _Cmd(Cmd):  # To seperate from cmd.Cmd
+class RSACmd(Cmd):
+    """
+    Main shell class
+    """
+
     prompt = "rsa>"
 
     def do_exit(self, inp):
@@ -48,9 +54,11 @@ class _Cmd(Cmd):  # To seperate from cmd.Cmd
         sp.run("python")
 
     def do_run(self, inp):
+        """Run a shell command"""
         sp.run(inp, shell=True)
 
     def do_decrypt(self, inp):
+        """Decrypt"""
         inp = inp.split(" ")
 
     do_q = do_e = do_exit = do_x = do_exit
@@ -58,10 +66,13 @@ class _Cmd(Cmd):  # To seperate from cmd.Cmd
 
 
 def recloop(dens=-1):
+    """
+    Runs the shell over and over again
+    """
     if dens == 0:
         return
     try:
-        _Cmd().cmdloop()
+        RSACmd().cmdloop()
 
     except KeyboardInterrupt:
         print("Bye!")
@@ -71,7 +82,8 @@ def recloop(dens=-1):
         recloop(dens - 1)
 
 
-density = -1
-if len(sys.argv) != 1:
-    density = int(sys.argv[1])
-recloop(dens=density)
+if __name__ == "__main__":
+    density = -1
+    if len(sys.argv) != 1:
+        density = int(sys.argv[1])
+    recloop(dens=density)

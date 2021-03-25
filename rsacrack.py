@@ -1,33 +1,15 @@
-import click, math, rsa, time
-from itertools import count
-from sympy import mod_inverse
+import math
+import time
+import typing
 
-click.arg = click.argument
-"""
-def genpls():
-    yield 2; yield 3; yield 5;
-    sieve = {}
-    ps = genpls()
-    p = next(ps) and next(ps)
-    q = p*p
-    for c in count(7,2):
-        if c in sieve:
-            s = sieve.pop(c)
-        elif c < q:
-             yield c
-             continue
-        else:
-            s=count(q+2*p,2*p)
-            p=next(ps)
-            q=p*p
-        for m in s:
-            if m not in sieve:
-                break
-        sieve[m] = s
-"""
-#'''
-def genpls():
-    yield from (2, 3)
+import click
+import rsa
+
+
+def genprimes_generic():
+    """Generates probable primes using 6*i +- 1"""
+    yield 2
+    yield 3
     i = 1
     while True:
         yield 6 * i - 1
@@ -35,47 +17,39 @@ def genpls():
         i += 1
 
 
-#'''
-"""
-import itertools as it
-def genpls( ):
-    D = { 9: 3, 25: 5 }
-    yield 2
-    yield 3
-    yield 5
-    MASK= 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0,
-    MODULOS= frozenset( (1, 7, 11, 13, 17, 19, 23, 29) )
-
-    for q in it.compress(
-            it.islice(it.count(7), 0, None, 2),
-            it.cycle(MASK)):
-        p = D.pop(q, None)
-        if p is None:
-            D[q*q] = q
-            yield q
-        else:
-            x = q + 2*p
-            while x in D or (x%30) not in MODULOS:
-                x += 2*p
-            D[x] = p
-"""
+def genprimes_file(f):
+    """
+    Generates primes from a given file that contains a list
+    """
+    with open(f) as file:
+        for i in file:
+            yield int(i)
 
 
-def egcd(a, b):
+def egcd(a: int, b: int) -> typing.Tuple[int, int, int]:
+    """
+    Calculates the Euclidean GCD of a and b
+    """
     if a == 0:
-        return (b, 0, 1)
+        return b, 0, 1
     g, y, x = egcd(b % a, a)
-    return (g, x - (b // a) * y, y)
+    return g, x - (b // a) * y, y
 
 
-def modinv(a, m):
+def modinv(a: int, m: int) -> int:
+    """
+    Calculates the modular inverse of a and m
+    """
     g, x, y = egcd(a, m)
     if g != 1:
         raise Exception("No modular inverse")
     return x % m
 
 
-def genprimes(n):
+def genprimes(n) -> typing.List:
+    """
+    A copy of the prime generator found in fastgen.py
+    """
     primes = [2, 3]
     sqrtn = math.sqrt(n)
     c = int(sqrtn - (sqrtn % 1))
@@ -92,58 +66,24 @@ def genprimes(n):
 
 @click.group()
 def main():
+    """Main group"""
     pass
 
 
 @main.command()
-@click.arg("n")
-@click.arg("e")
+@click.argument("i")
 @click.option("--outf", "-o", default=None)
-def crack(n, e, outf):
-    print("No longer supported")
-    return
+@click.option("-p", "--primelist", default=None, type=click.Path())
+def fcrack(i, outf, primelist):
+    """
+    Finds the private key of the public key in OUTF, optionally using PRIMELIST as a list of primes
+    """
+    if primelist is None:
+        genpls = genprimes_generic()
+    else:
+        genpls = genprimes_file(primelist)
     st = time.time()
-    n = int(n)
-    e = int(e)
-    sqrtn = float(repr(math.sqrt(n)))
-    c = int(sqrtn - (sqrtn % 1))
-    if c % 2 == 0:
-        c -= 1
-    print("Cracking Started")
-    count = 0
-    for i in range(c, 3, -2):
-        if n % i == 0:
-            print("Solution found:\n" + str(i), n % i)
-            break
-        if count % 100000 == 0:
-            print(i, n % i)
-        count += 1
-    p = i
-    q = n / p
-    phin = (p - 1) * (q - 1)
-    d = modinv(e, phin)
-    p, q = q, p
-    print("P: ", int(p))
-    print("Q: ", int(q))
-    print("Phi(n): ", repr(int(phin)))
-    print("Coef: ", int(rsa.common.inverse(q, p)))
-    print("Exp1: ", int(d % (p - 1)))
-    print("Exp2: ", int(d % (q - 1)))
-    print("D: ", int(d))
-    print("Cracking took", time.time() - st)
-    if outf == None:
-        return
-    with open(outf, "wb") as f:
-        key = rsa.PrivateKey(n, e, d, p, q)
-        f.write(key.save_pkcs1())
-
-
-@main.command()
-@click.arg("i")
-@click.option("--outf", "-o", default=None)
-def fcrack(i, outf):
-    st = time.time()
-    with open(i) as f:
+    with open(i, "rb") as f:
         privkey = rsa.PublicKey.load_pkcs1(f.read(), "PEM")
     n = privkey.n
     e = privkey.e
@@ -155,7 +95,7 @@ def fcrack(i, outf):
     if c % 2 == 0:
         c -= 1
     print("Cracking Started")
-    for i in genpls():
+    for i in genpls:
         if n % i == 0:
             print("Solution found:\n" + str(i), n % i)
             sol = 1
@@ -180,7 +120,7 @@ def fcrack(i, outf):
     print("Exp2: ", int(d % (q - 1)))
     print("D: ", int(d))
     print("Cracking took", time.time() - st, "seconds")
-    if outf == None:
+    if outf is None:
         return
     with open(outf, "wb") as f:
         key = rsa.PrivateKey(n, e, d, p, q)
