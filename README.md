@@ -6,5 +6,5 @@ library (rsacli.py), a WIP interactive shell (rsashell.py), a simple RSA cracker
 Python's builtin Hashlib (quickhash.py).
 <br><br>
 Documentation can be found on
-[ReadTheDocs](https://rsalib.readthedocs.io/en/master/) or the
+[ReadTheDocs](https://rsalib.readthedocs.io) or the
 raw Sphinx documentation can be found in the docs folder.
