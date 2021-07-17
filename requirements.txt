@@ -15,7 +15,7 @@ karma-sphinx-theme==0.0.8
 MarkupSafe==1.1.1
 mpmath==1.2.1
 packaging==20.9
-Pillow==8.2.0
+Pillow==8.3.0
 pyasn1==0.4.8
 pyfiglet==0.8.post1
 Pygments==2.8.1
