@@ -1,5 +1,5 @@
 alabaster==0.7.12
-Babel==2.9.0
+Babel==2.9.1
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
@@ -15,7 +15,7 @@ karma-sphinx-theme==0.0.8
 MarkupSafe==1.1.1
 mpmath==1.2.1
 packaging==20.9
-Pillow==8.2.0
+Pillow==9.0.1
 pyasn1==0.4.8
 pyfiglet==0.8.post1
 Pygments==2.8.1
@@ -34,5 +34,5 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.4
 sympy==1.6.2
-urllib3==1.26.4
+urllib3==1.26.5
 zipp==3.4.1
