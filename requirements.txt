@@ -13,7 +13,7 @@ importlib-metadata==3.7.3
 Jinja2==2.11.3
 karma-sphinx-theme==0.0.8
 MarkupSafe==1.1.1
-mpmath==1.2.1
+mpmath==1.3.0
 packaging==20.9
 Pillow==8.2.0
 pyasn1==0.4.8
