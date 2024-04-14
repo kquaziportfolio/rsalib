@@ -7,7 +7,7 @@ click-didyoumean==0.0.3
 click-spinner==0.1.10
 colorama==0.4.3
 docutils==0.16
-idna==2.10
+idna==3.7
 imagesize==1.2.0
 importlib-metadata==3.7.3
 Jinja2==2.11.3
